@@ -1,3 +1,6 @@
+// No payload package.json , adicionar "start": nodemon + (Nome do arquivo.js)
+// ex: "start": "nodemon index.js (é o nome do nosso arquivo)"
+
 const express = require('express');
 const app = express();
 const pool = require('./dB');
@@ -50,7 +53,7 @@ app.put ('/series/:id', async(req,res) => {
     }
 });
 
-app.delete
+app.delete ('/series/:id,')
 
 
 //--//
