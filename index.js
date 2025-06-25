@@ -53,7 +53,7 @@ app.put ('/series/:id', async(req,res) => {
     }
 });
 
-app.delete ('/series/:id,')
+app.delete ('/series/:id')
 
 
 //--//
