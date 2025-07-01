@@ -19,11 +19,11 @@ app.get('/series',async (_,res) => {
 });
 
 app.post('/series', async (req,res) => {
-    const { id, title, yearexhibition, gender_id, rating_id, season_id, status } = req.body;
+    const { id, title, yearexhibition, gender_id, rating_id, status } = req.body;
     try {
         const series = await pool.query(
-            'INSERT INTO series(id, title, yearexhibition, gender_id, rating_id, season_id, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-             [id, title, yearexhibition, gender_id, rating_id, season_id, status]
+            'INSERT INTO series(id, title, yearexhibition, gender_id, rating_id, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+             [id, title, yearexhibition, gender_id, rating_id, status]
             );
      res.status(201).json(series.rows[0]);
     } catch (err) {
@@ -34,26 +34,25 @@ app.post('/series', async (req,res) => {
 
 app.put ('/series/:id', async(req,res) => {
     const { id } = req.params;
-    const { title, yearexhibition, gender_id, rating_id, season_id, status } = req.body;
+    const { title, yearexhibition, gender_id, rating_id, status } = req.body;
 
     try {
         const series = await pool.query(
-            'UPDATE series SET title = $1, yearexhibition = $2, gender_id = $3, rating_id = $4, season_id = $5, status = $6 WHERE id = $7'
-            [title, yearexhibition, gender_id, rating_id, season_id, status, id]
+            'UPDATE series SET title = $1, yearexhibition = $2, gender_id = $3, rating_id = $4, status = $5 WHERE id = $6 RETURNING *',
+            [title, yearexhibition, gender_id, rating_id, status, id]
         )
         
-
-    if (series.rowcount === 0) {
-        return res.status(404).json ({error: 'Não existe esta série na DataBase'})
+    if (series.rowCount === 0) {
+        return res.status(404).json ({error: 'Não existe esta série na DB'})
     }   
         res.status(200).json(series.rows[0]);
     } catch (err) {
-    console.error('Falha ao adicionar tarefa, Verifique os dados e tente novamente',err)
-    res.status(500).json ({error: 'Erro ao adicionar serie no Banco' })
+    console.error('Falha ao adicionar serie, Verifique os dados e tente novamente',err)
+    res.status(500).json ({error: 'Erro ao adicionar serie no DB' })
     }
 });
 
-app.delete ('/series/:id'), async (req, res) => {
+app.delete ('/series/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -66,7 +65,7 @@ app.delete ('/series/:id'), async (req, res) => {
         console.error ('Erro ao deletar série:', err);
         res.status(500).json({ error: 'Erro em remover a Série do banco'})
     }
-};
+});
 
 
 //--//
