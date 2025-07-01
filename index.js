@@ -53,7 +53,20 @@ app.put ('/series/:id', async(req,res) => {
     }
 });
 
-app.delete ('/series/:id')
+app.delete ('/series/:id'), async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const tarefas = await pool.query ('DELETE FROM series WHERE id = $1 RETURNING *', [id]);
+        if (tarefas.rowCount === 0) {
+            return res.status(404).json({ error: 'Série não está no banco, Impossivel a exclusão'});
+        }
+        res.status(200).json({ message: 'Série excluída do banco com sucesso'});
+    } catch (err) {
+        console.error ('Erro ao deletar série:', err);
+        res.status(500).json({ error: 'Erro em remover a Série do banco'})
+    }
+};
 
 
 //--//
